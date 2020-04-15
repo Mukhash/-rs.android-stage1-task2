@@ -7,24 +7,20 @@ import java.util.*
 class DateFormatter {
 
     // TODO: Upgrade this solution
-    fun toTextDay(day: String, month: String, year: String): String =
-        if (!isDateValid(day.toInt(), month.toInt(), year.toInt()))
-            "Такого дня не существует"
-        else LocalDate.parse("$day-$month-$year", DateTimeFormatter.ofPattern("dd-M-yyyy"))
-            .format(DateTimeFormatter.ofPattern("dd MMMM, EEEE", Locale("ru")))
+    fun toTextDay(day: String, month: String, year: String): String {
+        val mapOfMonths = hashMapOf("JANUARY" to "января", "FEBRUARY" to "февраля", "MARCH" to "марта", "APRIL" to "апреля",
+            "MAY" to "мая", "JUNE" to "июня", "JULY" to "июля", "AUGUST" to "августа",
+            "SEPTEMBER" to "сентября", "OCTOBER" to "октября", "NOVEMBER" to "ноября", "DECEMBER" to "декабря")
+        val mapOfWeeks = hashMapOf("MONDAY" to "понедельник", "TUESDAY" to "вторник", "WEDNESDAY" to "среда", "THURSDAY" to "четверг",
+            "FRIDAY" to "пятница", "SATURDAY" to "суббота", "SUNDAY" to "воскресенье")
+        try {
+            val date = LocalDate.of(year.toInt(), month.toInt(), day.toInt()).format(
+                DateTimeFormatter.ofPattern("dd MMMM, EEEE", Locale("ru")))
 
-    private fun isDateValid(day: Int, month: Int, year: Int) = when {
-        month > 12 -> false
-        day > when (month) {
-            4, 6, 9, 11 -> 30
-            2 -> when (0) {
-                year % 400 -> 29
-                year % 100 -> 28
-                year % 4 -> 29
-                else -> 28
-            }
-            else -> 31
-        } -> false
-        else -> true
+            return date
+
+        } catch (e: Exception) {
+            return "Такого дня не существует"
+        }
     }
 }

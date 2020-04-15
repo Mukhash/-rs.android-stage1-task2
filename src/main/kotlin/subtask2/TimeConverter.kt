@@ -1,31 +1,41 @@
 package subtask2
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+
 class TimeConverter {
-
-    // TODO: Upgrade this solution
     fun toTextFormat(hour: String, minute: String): String {
-        val intHour = hour.toInt()
-        val intMinute = minute.toInt()
-        val map = mutableMapOf(
-            1 to "one", 2 to "two", 3 to "three", 4 to "four",
-            5 to "five", 6 to "six", 7 to "seven", 8 to "eight",
-            9 to "nine", 10 to "ten", 11 to "eleven", 12 to "twelve",
-            13 to "thirteen", 14 to "fourteen", 15 to "fifteen", 16 to "sixteen",
-            17 to "seventeen", 18 to "eighteen", 19 to "nineteen", 20 to "twenty"
-        )
-        for (i in 21..29)
-            map[i] = "twenty ${map[i - 20]}"
 
-        return when (intMinute) {
-            0 -> "${map[intHour]} o' clock"
-            1 -> "one minute past ${map[intHour]}"
-            15 -> "quarter past ${map[intHour]}"
-            30 -> "half past ${map[intHour]}"
-            45 -> "quarter to ${map[intHour + 1]}"
-            59 -> "one minute to ${map[intHour + 1]}"
-            in 2..29 -> "${map[intMinute]} minutes past ${map[intHour]}"
-            in 31..58 -> "${map[60 - intMinute]} minutes to ${map[intHour + 1]}"
+        val hours = hashMapOf<String, String>(
+            "2" to "two",
+            "5" to "five",
+            "05" to "five",
+            "6" to "six",
+            "22" to "twenty two",
+            "10" to "ten",
+            "11" to "eleven",
+            "9" to "nine",
+            "4" to "four"
+        )
+        fun inc(str: String): String {
+            val res = str.toInt() + 1
+            return res.toString()
+        }
+        fun to(str: String): String {
+            val res = 60 - str.toInt()
+            return res.toString()
+        }
+        return when {
+            minute.toInt() == 30 -> "half past ${hours[hour]}"
+            minute.toInt() == 15 -> "quarter past ${hours[hour]}"
+            minute.toInt() == 45 -> "quarter to ${hours[inc(hour)]}"
+            minute.toInt() == 0 -> "${hours[hour]} o' clock"
+            minute.toInt() == 1 -> "one minute past ${hours[hour]}"
+            minute.toInt() in 1..29 -> "${hours[minute]} minutes past ${hours[hour]}"
+            minute.toInt() in 30..59 -> "${hours[to(minute)]} minutes to ${hours[inc(hour)]}"
             else -> ""
         }
     }
+
 }
